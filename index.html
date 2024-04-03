@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mapa de Google sin cuadro de búsqueda</title>
+    <style>
+        #map {
+            height: 600px;
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script>
+        function initMap() {
+            // lat: -16.5414373,lng: -68.0835338
+            const center = {lat: -16.5414373, lng: -68.0835338};
+
+            const mapOptions = {
+                center: center,
+                zoom: 15,
+                disableDefaultUI: true, 
+                mapTypeId: 'satellite', 
+                styles: [
+                    { featureType: "poi", stylers: [{ visibility: "off" }] } ,
+                ]
+            };
+
+            const map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+            const trafficLayer = new google.maps.TrafficLayer();
+            trafficLayer.setMap(map);
+        }
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIqstfGuCA7iAYiwJQ6DOxdpCFMSlYHXs&callback=initMap" async defer></script>
+</body>
+</html>
+
