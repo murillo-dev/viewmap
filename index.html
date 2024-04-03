@@ -15,7 +15,15 @@
     <script>
         function initMap() {
             // lat: -16.5414373,lng: -68.0835338
-            const center = {lat: -16.5414373, lng: -68.0835338};
+            var urlParams = new URLSearchParams(window.location.search);
+            var lat = parseFloat(urlParams.get('lat'));
+            var lng = parseFloat(urlParams.get('lng'));
+
+            if (!isNaN(lat) && !isNaN(lng)) {
+                var center = {lat: lat, lng: lng};
+            }else {
+                var center = {lat: -16.5414373, lng: -68.0835338};
+            }
 
             const mapOptions = {
                 center: center,
