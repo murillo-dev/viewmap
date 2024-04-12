@@ -3,21 +3,40 @@
 <head>
     <title>Mapa de Google sin cuadro de búsqueda</title>
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
         #map {
             height: 100vh;
             width: 100vw;
         }
+        #toggle-satellite {
+            position: absolute;
+            top: 10px; 
+            right: 10px; 
+            z-index: 1;
+        }
+        
     </style>
 </head>
 <body>
     <div id="map"></div>
-
+    <button id="toggle-satellite">RoadMap</button>
     <script>
+
+        let mapType = true;
+
         function initMap() {
             // lat: -16.5414373,lng: -68.0835338
             var urlParams = new URLSearchParams(window.location.search);
             var lat = parseFloat(urlParams.get('lat'));
             var lng = parseFloat(urlParams.get('lng'));
+
+            let trafficEnabled = false;
 
             if (!isNaN(lat) && !isNaN(lng)) {
                 var center = {lat: lat, lng: lng};
@@ -25,31 +44,54 @@
                 var center = {lat: -16.5414373, lng: -68.0835338};
             }
 
-            const mapOptions = {
+            var mapOptions = {
                 center: center,
                 zoom: 15,
                 disableDefaultUI: true, 
-                mapTypeId: 'satellite', 
                 styles: [
-                    { featureType: "poi", stylers: [{ visibility: "off" }] } ,
-                ]
+                    { 
+                        featureType: "poi", 
+                        elementType:"labels" , 
+                        stylers: [
+                            { visibility: "off" }
+                        ] 
+                    } ,
+                ],
+                mapTypeId: google.maps.MapTypeId.SATELLITE,
             };
 
             
             const map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+            const trafficLayer = new google.maps.TrafficLayer();
+            trafficLayer.setMap(map); 
             
             var marker = new google.maps.Marker({
                     position: {lat: lat, lng: lng},
                     map: map,
                     title: 'Posición especificada'
                 });
+
+            function toggleSatellite() {
+                if (mapType) {
+                    mapType = false;
+                    map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
+                    document.getElementById("toggle-satellite").textContent = "Satellite";
+                } else {
+                    mapType = true;
+                    map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+                    document.getElementById("toggle-satellite").textContent = "RoadMap";
+                }
+            }
                 
-            const trafficLayer = new google.maps.TrafficLayer();
-            trafficLayer.setMap(map);
+            document.getElementById("toggle-satellite").addEventListener("click", toggleSatellite);
         }
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIqstfGuCA7iAYiwJQ6DOxdpCFMSlYHXs&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDetPsVibU72yz4qYMDUGuQfo9_Qn9PI-s&callback=initMap" async defer></script>
+    <!-- AIzaSyBIqstfGuCA7iAYiwJQ6DOxdpCFMSlYHXs -->
+    <!-- AIzaSyABh5QFivDCfRUUvc5JcCBvrjbIn-zwowI -->
+    <!-- AIzaSyDetPsVibU72yz4qYMDUGuQfo9_Qn9PI-s -->
 </body>
 </html>
 
