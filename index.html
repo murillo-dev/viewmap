@@ -51,7 +51,7 @@
 <body>
     <div id="map"></div>
     <button id="toggle-satellite">RoadMap</button>
-    <button id="toggle-image">image</button>
+    <button id="toggle-image">imagen</button>
     <div id="images">
         <img src="" alt="" id="image-tableu">
     </div>
@@ -62,12 +62,14 @@
         var urlParams = new URLSearchParams(window.location.search);
         var image = urlParams.get('image');
         
-        if (image == null) {
-            document.getElementById("image").style.display = "none";
+
+        console.log(image);
+        if (image == null || image == 'null') {
+            document.getElementById("toggle-image").style.display = "none";
+        }else {
+            document.getElementById("toggle-image").style.display = "block";
+            document.getElementById("toggle-image").addEventListener("click", toogleImage);
         }
-
-        document.getElementById("toggle-image").addEventListener("click", toogleImage);
-
 
 
         function toogleImage() {
@@ -75,11 +77,12 @@
                 document.getElementById("map").style.display = "none";
                 document.getElementById("toggle-satellite").style.display = "none";
                 document.getElementById("images").style.display = "block";
-                // var image = 'task_4/D004NO20240412-121141-000154F.MP4/frame_001799.jpg'
+                document.getElementById("toggle-image").textContent = "Mapa";
                 show_image = document.getElementById('image-tableu')
                 show_image.src = 'https://cvat-frames.s3.amazonaws.com/' + image;
-
+                
             } else {
+                document.getElementById("toggle-image").textContent = "imagen";
                 document.getElementById("map").style.display = "block";
                 document.getElementById("toggle-satellite").style.display = "block";
                 document.getElementById("images").style.display = "none";
@@ -148,9 +151,6 @@
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDetPsVibU72yz4qYMDUGuQfo9_Qn9PI-s&callback=initMap"
         async defer></script>
-    <!-- AIzaSyBIqstfGuCA7iAYiwJQ6DOxdpCFMSlYHXs -->
-    <!-- AIzaSyABh5QFivDCfRUUvc5JcCBvrjbIn-zwowI -->
-    <!-- AIzaSyDetPsVibU72yz4qYMDUGuQfo9_Qn9PI-s -->
 </body>
 
 </html>
