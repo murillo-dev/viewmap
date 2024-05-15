@@ -59,14 +59,15 @@
 
         let mapType = true;
         let showImage = true;
-
-        document.getElementById("toggle-image").addEventListener("click", toogleImage);
         var urlParams = new URLSearchParams(window.location.search);
         var image = urlParams.get('image');
+        
+        if (image == null) {
+            document.getElementById("image").style.display = "none";
+        }
 
-        // if (image == null) {
-        //     document.getElementById("image").style.display = "none";
-        // }
+        document.getElementById("toggle-image").addEventListener("click", toogleImage);
+
 
 
         function toogleImage() {
