@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Mapa de Google sin cuadro de búsqueda</title>
     <style>
@@ -10,25 +11,43 @@
             height: 100%;
             overflow: hidden;
         }
+
         #map {
             height: 100vh;
             width: 100vw;
         }
+
         #toggle-satellite {
             position: absolute;
-            top: 10px; 
-            right: 10px; 
+            top: 10px;
+            right: 10px;
             z-index: 1;
         }
+
         #toggle-image {
             position: absolute;
-            top: 40px; 
-            right: 10px; 
+            top: 40px;
+            right: 10px;
             z-index: 1;
         }
-        
+
+        #images {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div id="map"></div>
     <button id="toggle-satellite">RoadMap</button>
@@ -42,21 +61,27 @@
         let showImage = true;
 
         document.getElementById("toggle-image").addEventListener("click", toogleImage);
+        var urlParams = new URLSearchParams(window.location.search);
+        var image = urlParams.get('image');
+
+        if (image === null) {
+            document.getElementById("image").
+        }
+
 
         function toogleImage() {
             if (showImage) {
-                document.getElementById("map").style.display= "none";
-                document.getElementById("toggle-satellite").style.display= "none";
-                document.getElementById("images").style.display= "block";
-                var urlParams = new URLSearchParams(window.location.search);
-                var image =  'task_4/D004NO20240412-121141-000154F.MP4/frame_001799.jpg'
+                document.getElementById("map").style.display = "none";
+                document.getElementById("toggle-satellite").style.display = "none";
+                document.getElementById("images").style.display = "block";
+                // var image = 'task_4/D004NO20240412-121141-000154F.MP4/frame_001799.jpg'
                 show_image = document.getElementById('image-tableu')
-                show_image.src = 'https://cvat-frames.s3.amazonaws.com/'+image;
+                show_image.src = 'https://cvat-frames.s3.amazonaws.com/' + image;
 
-            }else {
-                document.getElementById("map").style.display= "block";
-                document.getElementById("toggle-satellite").style.display= "block";
-                document.getElementById("images").style.display= "none";
+            } else {
+                document.getElementById("map").style.display = "block";
+                document.getElementById("toggle-satellite").style.display = "block";
+                document.getElementById("images").style.display = "none";
             }
             showImage = !showImage;
         }
@@ -71,38 +96,38 @@
             let trafficEnabled = false;
 
             if (!isNaN(lat) && !isNaN(lng)) {
-                var center = {lat: lat, lng: lng};
-            }else {
-                var center = {lat: -16.5414373, lng: -68.0835338};
+                var center = { lat: lat, lng: lng };
+            } else {
+                var center = { lat: -16.5414373, lng: -68.0835338 };
             }
 
             var mapOptions = {
                 center: center,
                 zoom: 15,
-                disableDefaultUI: true, 
+                disableDefaultUI: true,
                 styles: [
-                    { 
-                        featureType: "poi", 
-                        elementType:"labels" , 
+                    {
+                        featureType: "poi",
+                        elementType: "labels",
                         stylers: [
                             { visibility: "off" }
-                        ] 
-                    } ,
+                        ]
+                    },
                 ],
                 mapTypeId: google.maps.MapTypeId.SATELLITE,
             };
 
-            
+
             const map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
             const trafficLayer = new google.maps.TrafficLayer();
-            trafficLayer.setMap(map); 
-            
+            trafficLayer.setMap(map);
+
             var marker = new google.maps.Marker({
-                    position: {lat: lat, lng: lng},
-                    map: map,
-                    title: 'Posición especificada'
-                });
+                position: { lat: lat, lng: lng },
+                map: map,
+                title: 'Posición especificada'
+            });
 
             function toggleSatellite() {
                 if (mapType) {
@@ -115,15 +140,16 @@
                     document.getElementById("toggle-satellite").textContent = "RoadMap";
                 }
             }
-                
+
             document.getElementById("toggle-satellite").addEventListener("click", toggleSatellite);
         }
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDetPsVibU72yz4qYMDUGuQfo9_Qn9PI-s&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDetPsVibU72yz4qYMDUGuQfo9_Qn9PI-s&callback=initMap"
+        async defer></script>
     <!-- AIzaSyBIqstfGuCA7iAYiwJQ6DOxdpCFMSlYHXs -->
     <!-- AIzaSyABh5QFivDCfRUUvc5JcCBvrjbIn-zwowI -->
     <!-- AIzaSyDetPsVibU72yz4qYMDUGuQfo9_Qn9PI-s -->
 </body>
-</html>
 
+</html>
