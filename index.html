@@ -29,6 +29,7 @@
                 font-size: 14px;
                 color: #555;
                 text-align: right;
+
                 img {
                     width: 40%;
                 }
@@ -70,11 +71,10 @@
 
         let mapType = true;
         let showImage = true;
-        var urlParams = new URLSearchParams(window.location.search);
-        var image = urlParams.get('image');
-        var lat = parseFloat(urlParams.get('lat'));
-        var lng = parseFloat(urlParams.get('lng'));
-
+        let urlParams = new URLSearchParams(window.location.search);
+        let image = urlParams.get('image');
+        let lat = parseFloat(urlParams.get('lat'));
+        let lng = parseFloat(urlParams.get('lng'));
 
         if (image == null || image == 'null' || image == "") {
             document.getElementById("toggle-image").style.display = "none";
@@ -83,14 +83,11 @@
             document.getElementById("toggle-image").addEventListener("click", toogleImage);
         }
 
-
         function toogleImage() {
             if (showImage) {
                 document.getElementById("map").style.display = "none";
                 document.getElementById("toggle-satellite").style.display = "none";
                 document.getElementById("images").style.display = "block";
-                var urlParams = new URLSearchParams(window.location.search);
-                // var image = 'task_4/D004NO20240412-121141-000154F.MP4/frame_001799.jpg'
                 show_image = document.getElementById('image-tableu')
                 show_image.src = 'https://cvat-frames.s3.amazonaws.com/' + image;
 
@@ -102,20 +99,17 @@
             showImage = !showImage;
         }
 
-
         function initMap() {
             // lat: -16.5414373,lng: -68.0835338
-
-
             let trafficEnabled = false;
-
+            let center;
             if (!isNaN(lat) && !isNaN(lng)) {
-                var center = { lat: lat, lng: lng };
+                center = { lat: lat, lng: lng };
             } else {
-                var center = { lat: -16.5414373, lng: -68.0835338 };
+                center = { lat: -16.5414373, lng: -68.0835338 };
             }
 
-            var mapOptions = {
+            let mapOptions = {
                 center: center,
                 zoom: 15,
                 disableDefaultUI: true,
@@ -131,13 +125,12 @@
                 mapTypeId: google.maps.MapTypeId.SATELLITE,
             };
 
-
             const map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
             const trafficLayer = new google.maps.TrafficLayer();
             trafficLayer.setMap(map);
 
-            var marker = new google.maps.Marker({
+            const marker = new google.maps.Marker({
                 position: { lat: lat, lng: lng },
                 map: map,
                 title: 'Posición especificada'
