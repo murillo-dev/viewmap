@@ -69,6 +69,8 @@
         let showImage = true;
         var urlParams = new URLSearchParams(window.location.search);
         var image = urlParams.get('image');
+        var lat = parseFloat(urlParams.get('lat'));
+        var lng = parseFloat(urlParams.get('lng'));
 
 
         if (image == null || image == 'null') {
@@ -100,9 +102,7 @@
 
         function initMap() {
             // lat: -16.5414373,lng: -68.0835338
-            var urlParams = new URLSearchParams(window.location.search);
-            var lat = parseFloat(urlParams.get('lat'));
-            var lng = parseFloat(urlParams.get('lng'));
+            
 
             let trafficEnabled = false;
 
