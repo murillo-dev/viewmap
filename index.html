@@ -10,6 +10,30 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
+
+            .polaroid {
+                padding: 10px 10px 10px;
+                background: white;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                text-align: center;
+                border: 1px solid #bfbfbf;
+                border-radius: 5px;
+
+                img {
+                    width: 100%;
+                    height: auto;
+                }
+            }
+
+            .polaroid .caption {
+                font-size: 14px;
+                color: #555;
+                text-align: right;
+
+                img {
+                    width: 40%;
+                }
+            }
         }
 
         #map {
@@ -30,30 +54,18 @@
             right: 10px;
             z-index: 1;
         }
-
-        #images {
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-        }
     </style>
 </head>
 
 <body>
     <div id="map"></div>
     <button id="toggle-satellite">RoadMap</button>
-    <button id="toggle-image">imagen</button>
-    <div id="images">
+    <button id="toggle-image">image</button>
+    <div id="images" class="polaroid">
         <img src="" alt="" id="image-tableu">
+        <div class="caption">
+            <img src="images/logo-ciudata-1024x311.png" alt="" alt="ciudata" height="10">
+        </div>
     </div>
     <script>
 
@@ -94,8 +106,8 @@
                 show_image = document.getElementById('image-tableu');
                 show_image.src = 'https://cvat-frames.s3.amazonaws.com/' + image;
 
+
             } else {
-                document.getElementById("toggle-image").textContent = "imagen";
                 document.getElementById("map").style.display = "block";
                 document.getElementById("toggle-satellite").style.display = "block";
                 document.getElementById("images").style.display = "none";
@@ -103,21 +115,20 @@
             showImage = !showImage;
         }
 
-
         function initMap() {
             // lat: -16.5414373,lng: -68.0835338
             var urlParams = new URLSearchParams(window.location.search);
 
 
             let trafficEnabled = false;
-
+            let center;
             if (!isNaN(lat) && !isNaN(lng)) {
-                var center = { lat: lat, lng: lng };
+                center = { lat: lat, lng: lng };
             } else {
-                var center = { lat: -16.5414373, lng: -68.0835338 };
+                center = { lat: -16.5414373, lng: -68.0835338 };
             }
 
-            var mapOptions = {
+            let mapOptions = {
                 center: center,
                 zoom: 15,
                 disableDefaultUI: true,
@@ -133,7 +144,6 @@
                 mapTypeId: google.maps.MapTypeId.SATELLITE,
             };
 
-
             const map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
             const trafficLayer = new google.maps.TrafficLayer();
@@ -145,7 +155,13 @@
 
             trafficLayer.setOptions(trafficOptions);
 
-            var marker = new google.maps.Marker({
+            const trafficOptions = {
+                autoRefresh: true,
+            }
+
+            trafficLayer.setOptions(trafficOptions);
+
+            const marker = new google.maps.Marker({
                 position: { lat: lat, lng: lng },
                 map: map,
                 title: 'Posición especificada'
@@ -169,6 +185,9 @@
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDetPsVibU72yz4qYMDUGuQfo9_Qn9PI-s&callback=initMap"
         async defer></script>
+    <!-- AIzaSyBIqstfGuCA7iAYiwJQ6DOxdpCFMSlYHXs -->
+    <!-- AIzaSyABh5QFivDCfRUUvc5JcCBvrjbIn-zwowI -->
+    <!-- AIzaSyDetPsVibU72yz4qYMDUGuQfo9_Qn9PI-s -->
 </body>
 
 </html>
