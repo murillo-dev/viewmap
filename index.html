@@ -1,186 +1,161 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
     <title>Mapa de Google sin cuadro de búsqueda</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        .polaroid {
+          padding: 10px 10px 10px;
+          background: white;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          text-align: center;
+          border: 1px solid #bfbfbf;
+          border-radius: 5px;
+
+          img {
             width: 100%;
-            height: 100%;
-            overflow: hidden;
-
-            .polaroid {
-                padding: 10px 10px 10px;
-                background: white;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-                text-align: center;
-                border: 1px solid #bfbfbf;
-                border-radius: 5px;
-
-                img {
-                    width: 100%;
-                    height: auto;
-                }
-            }
-
-            .polaroid .caption {
-                font-size: 14px;
-                color: #555;
-                text-align: right;
-
-                img {
-                    width: 40%;
-                }
-            }
+            height: auto;
+          }
         }
 
-        #map {
-            height: 100vh;
-            width: 100vw;
-        }
+        .polaroid .caption {
+          font-size: 14px;
+          color: #555;
+          text-align: right;
 
-        #toggle-satellite {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 1;
+          img {
+            width: 40%;
+          }
         }
+      }
 
-        #toggle-image {
-            position: absolute;
-            top: 40px;
-            right: 10px;
-            z-index: 1;
-        }
+      #map {
+        height: 100vh;
+        width: 100vw;
+      }
+
+      #toggle-satellite {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 1;
+      }
+
+      #toggle-image {
+        position: absolute;
+        top: 40px;
+        right: 10px;
+        z-index: 1;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="map"></div>
     <button id="toggle-satellite">RoadMap</button>
     <button id="toggle-image">image</button>
     <div id="images" class="polaroid">
-        <img src="" alt="" id="image-tableu">
-        <div class="caption">
-            <img src="images/logo-ciudata-1024x311.png" alt="" alt="ciudata" height="10">
-        </div>
+      <img src="" alt="" id="image-tableu" />
+      <div class="caption">
+        <img
+          src="images/logo-ciudata-1024x311.png"
+          alt=""
+          alt="ciudata"
+          height="10"
+        />
+      </div>
     </div>
     <script>
+      mapboxgl.accessToken =
+        "pk.eyJ1IjoiYXhlbGppbSIsImEiOiJjbHF4eDk0dGswaTZpMmpxZ2lhMGg4djBnIn0.DHVxWnONr6SdddKn-nNKRQ";
 
-        let mapType = true;
-        let showImage = true;
-        var urlParams = new URLSearchParams(window.location.search);
-        var image = urlParams.get('image');
-        var lat = parseFloat(urlParams.get('lat'));
-        var lng = parseFloat(urlParams.get('lng'));
+      let mapType = true;
+      let showImage = true;
+      var urlParams = new URLSearchParams(window.location.search);
+      var image = urlParams.get("image");
+      var lat = parseFloat(urlParams.get("lat"));
+      var lng = parseFloat(urlParams.get("lng"));
 
-        console.log("long  ==> ", lng);
-        console.log("lat  ==> ", lat);
+      console.log("long  ==> ", lng);
+      console.log("lat  ==> ", lat);
+      console.log("image ==> ", image);
 
-        if (isNaN(lat) && isNaN(lng)) {
-            console.log("entra aca");
-            document.getElementById('toggle-satellite').style.display = "none";
-            document.getElementById('toggle-image').style.display = "none";
-            document.getElementById("map").style.display = "none";
-            document.getElementById("images").style.display = "block";
-            showImage = true;
-            show_image = document.getElementById('image-tableu');
-            show_image.src = 'https://cvat-frames.s3.amazonaws.com/' + image;
+      document
+        .getElementById("toggle-image")
+        .addEventListener("click", toogleImage);
+
+      if (isNaN(lat) && isNaN(lng)) {
+        console.log("entra aca");
+        document.getElementById("toggle-satellite").style.display = "none";
+        document.getElementById("toggle-image").style.display = "none";
+        document.getElementById("map").style.display = "none";
+        document.getElementById("images").style.display = "block";
+        showImage = true;
+        show_image = document.getElementById("image-tableu");
+        show_image.src = "https://cvat-frames.s3.amazonaws.com/" + image;
+      } else {
+        map = new mapboxgl.Map({
+          container: "map",
+          style: "mapbox://styles/mapbox/satellite-v9",
+          zoom: 18,
+          center: [lng, lat],
+        });
+        //   mapbox://styles/mapbox/satellite-v9
+        //   mapbox://styles/mapbox/streets-v12
+        const marker = new mapboxgl.Marker({ color: "red" })
+          .setLngLat([lng, lat])
+          .addTo(map);
+
+        if (image == null || image == "null") {
+          document.getElementById("toggle-image").style.display = "none";
         } else {
-            if (image == null || image == 'null') {
-                document.getElementById("toggle-image").style.display = "none";
-            } else {
-                document.getElementById("toggle-image").style.display = "block";
-                document.getElementById("toggle-image").addEventListener("click", toogleImage);
-            }
+          document.getElementById("toggle-image").style.display = "block";
         }
 
-        function toogleImage() {
-            if (showImage) {
-                document.getElementById("map").style.display = "none";
-                document.getElementById("toggle-satellite").style.display = "none";
-                document.getElementById("images").style.display = "block";
-                document.getElementById("toggle-image").textContent = "Mapa";
-                show_image = document.getElementById('image-tableu');
-                show_image.src = 'https://cvat-frames.s3.amazonaws.com/' + image;
-
-
-            } else {
-                document.getElementById("map").style.display = "block";
-                document.getElementById("toggle-satellite").style.display = "block";
-                document.getElementById("images").style.display = "none";
-            }
-            showImage = !showImage;
+        document
+          .getElementById("toggle-satellite")
+          .addEventListener("click", toggleSatellite);
+        function toggleSatellite() {
+          if (mapType) {
+            //   map.setStyle("mapbox://styles/mapbox/streets-v12");
+            map.setStyle("mapbox://styles/mapbox/traffic-day-v2");
+            document.getElementById("toggle-satellite").textContent =
+              "Satélite";
+          } else {
+            map.setStyle("mapbox://styles/mapbox/satellite-v9");
+            document.getElementById("toggle-satellite").textContent = "RoadMap";
+          }
+          mapType = !mapType;
         }
+      }
 
-        function initMap() {
-            // lat: -16.5414373,lng: -68.0835338
-            var urlParams = new URLSearchParams(window.location.search);
-
-            let trafficEnabled = false;
-            let center;
-            if (!isNaN(lat) && !isNaN(lng)) {
-                center = { lat: lat, lng: lng };
-            } else {
-                center = { lat: -16.5414373, lng: -68.0835338 };
-            }
-
-            let mapOptions = {
-                center: center,
-                zoom: 15,
-                disableDefaultUI: true,
-                styles: [
-                    {
-                        featureType: "poi",
-                        elementType: "labels",
-                        stylers: [
-                            { visibility: "off" }
-                        ]
-                    },
-                ],
-                mapTypeId: google.maps.MapTypeId.SATELLITE,
-            };
-
-            const map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
-            const trafficLayer = new google.maps.TrafficLayer();
-            trafficLayer.setMap(map);
-
-            const trafficOptions = {
-                autoRefresh: true,
-            }
-
-            trafficLayer.setOptions(trafficOptions);
-
-            const marker = new google.maps.Marker({
-                position: { lat: lat, lng: lng },
-                map: map,
-                title: 'Posición especificada'
-            });
-
-            function toggleSatellite() {
-                if (mapType) {
-                    mapType = false;
-                    map.setMapTypeId(google.maps.MapTypeId.ROADMAP);
-                    document.getElementById("toggle-satellite").textContent = "Satellite";
-                } else {
-                    mapType = true;
-                    map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
-                    document.getElementById("toggle-satellite").textContent = "RoadMap";
-                }
-            }
-
-            document.getElementById("toggle-satellite").addEventListener("click", toggleSatellite);
+      function toogleImage() {
+        if (showImage) {
+          document.getElementById("map").style.display = "none";
+          document.getElementById("toggle-satellite").style.display = "none";
+          document.getElementById("images").style.display = "block";
+          document.getElementById("toggle-image").textContent = "Mapa";
+          show_image = document.getElementById("image-tableu");
+          show_image.src = "https://cvat-frames.s3.amazonaws.com/" + image;
+        } else {
+          document.getElementById("map").style.display = "block";
+          document.getElementById("toggle-satellite").style.display = "block";
+          document.getElementById("images").style.display = "none";
+          document.getElementById("toggle-image").textContent = "Image";
         }
+        showImage = !showImage;
+      }
     </script>
-
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDetPsVibU72yz4qYMDUGuQfo9_Qn9PI-s&callback=initMap"
-        async defer></script>
-    <!-- AIzaSyBIqstfGuCA7iAYiwJQ6DOxdpCFMSlYHXs -->
-    <!-- AIzaSyABh5QFivDCfRUUvc5JcCBvrjbIn-zwowI -->
-    <!-- AIzaSyDetPsVibU72yz4qYMDUGuQfo9_Qn9PI-s -->
-</body>
-
+  </body>
 </html>
