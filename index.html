@@ -78,7 +78,7 @@
     </div>
     <script>
       mapboxgl.accessToken =
-        "pk.eyJ1IjoiYXhlbGppbSIsImEiOiJjbHF4eDk0dGswaTZpMmpxZ2lhMGg4djBnIn0.DHVxWnONr6SdddKn-nNKRQ";
+        "pk.eyJ1IjoibXVycmlzIiwiYSI6ImNscWY1MW43MzB1eTYyaXByZmRrNnU3aTEifQ.JPOCeImLkfeq5PzXS1eVcg";
 
       let mapType = true;
       let showImage = true;
@@ -86,10 +86,6 @@
       var image = urlParams.get("image");
       var lat = parseFloat(urlParams.get("lat"));
       var lng = parseFloat(urlParams.get("lng"));
-
-      console.log("long  ==> ", lng);
-      console.log("lat  ==> ", lat);
-      console.log("image ==> ", image);
 
       document
         .getElementById("toggle-image")
