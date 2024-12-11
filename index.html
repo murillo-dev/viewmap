@@ -99,7 +99,7 @@
         document.getElementById("images").style.display = "block";
         showImage = true;
         show_image = document.getElementById("image-tableu");
-        show_image.src = "https://cvat-frames.s3.amazonaws.com/" + image;
+        show_image.src = "https://storage.cloud.google.com/cvat-frames/" + image;
       } else {
         map = new mapboxgl.Map({
           container: "map",
