@@ -124,7 +124,6 @@
           .addEventListener("click", toggleSatellite);
         function toggleSatellite() {
           if (mapType) {
-            //   map.setStyle("mapbox://styles/mapbox/streets-v12");
             map.setStyle("mapbox://styles/mapbox/traffic-day-v2");
             document.getElementById("toggle-satellite").textContent =
               "Satélite";
@@ -143,7 +142,7 @@
           document.getElementById("images").style.display = "block";
           document.getElementById("toggle-image").textContent = "Mapa";
           show_image = document.getElementById("image-tableu");
-          show_image.src = "https://cvat-frames.s3.amazonaws.com/" + image;
+          show_image.src = "https://storage.cloud.google.com/cvat-frames/" + image;
         } else {
           document.getElementById("map").style.display = "block";
           document.getElementById("toggle-satellite").style.display = "block";
