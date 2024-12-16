@@ -99,7 +99,7 @@
         document.getElementById("images").style.display = "block";
         showImage = true;
         show_image = document.getElementById("image-tableu");
-        show_image.src = "https://storage.cloud.google.com/cvat-frames/" + image;
+        show_image.src = "https://storage.googleapis.com/cvat-frames/" + image;
       } else {
         map = new mapboxgl.Map({
           container: "map",
@@ -142,7 +142,7 @@
           document.getElementById("images").style.display = "block";
           document.getElementById("toggle-image").textContent = "Mapa";
           show_image = document.getElementById("image-tableu");
-          show_image.src = "https://storage.cloud.google.com/cvat-frames/" + image;
+          show_image.src = "https://storage.googleapis.com/cvat-frames/" + image;
         } else {
           document.getElementById("map").style.display = "block";
           document.getElementById("toggle-satellite").style.display = "block";
