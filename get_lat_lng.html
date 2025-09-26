@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mapa con Coordenadas al Clickear</title>
+  
+  <!-- Estilos de Mapbox -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: white;
+      padding: 12px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 2;
+    }
+    #coords {
+      margin-bottom: 10px;
+      min-height: 24px;
+    }
+    button {
+      padding: 6px 12px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div id="controls">
+    <div id="coords">Haz clic en el mapa para colocar un marcador.</div>
+    <button id="clearBtn" disabled>Borrar marcador</button>
+  </div>
+
+  <!-- Script de Mapbox -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
+  <script>
+    // Reemplaza esto con tu access token de Mapbox
+    mapboxgl.accessToken =
+        "pk.eyJ1IjoibXVycmlzIiwiYSI6ImNscWY1MW43MzB1eTYyaXByZmRrNnU3aTEifQ.JPOCeImLkfeq5PzXS1eVcg";
+
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v12', // Puedes cambiar el estilo
+      center: [-64.897370, -16.708755], // Coordenadas iniciales [lng, lat]
+      zoom: 6
+    });
+
+    // Elemento para mostrar coordenadas
+    const coordsElement = document.getElementById('coords');
+    const clearBtn = document.getElementById('clearBtn');
+    let currentMarker = null;
+
+    function clearMarker() {
+      if (currentMarker) {
+        currentMarker.remove();
+        currentMarker = null;
+        coordsElement.innerHTML = 'Haz clic en el mapa para colocar un marcador.';
+        clearBtn.disabled = true;
+      }
+    }
+
+    // Al hacer clic en el mapa
+    // map.on('click', (e) => {
+    //   const { lng, lat } = e.lngLat;
+
+    //   // Eliminar marcador anterior si existe
+    //   if (currentMarker !== null) {
+    //     currentMarker.remove();
+    //   }
+
+    //   // Crear nuevo marcador
+    //   currentMarker = new mapboxgl.Marker()
+    //     .setLngLat([lng, lat])
+    //     .addTo(map);
+
+    //   // Mostrar coordenadas
+    //   coordsElement.innerHTML = `Latitud: ${lat.toFixed(6)}<br>Longitud: ${lng.toFixed(6)}`;
+
+    //   // Opcional: agregar un marcador en el punto clickeado
+    //   new mapboxgl.Marker()
+    //     .setLngLat([lng, lat])
+    //     .addTo(map);
+
+    //   map.flyTo({ center: [lng, lat], zoom: 12 });
+    // });
+
+    // Opcional: mostrar el cursor de mano al pasar sobre el mapa
+    map.on('load', () => {
+      map.getCanvas().style.cursor = 'pointer';
+
+      map.on('click', (e) => {
+        const { lng, lat } = e.lngLat;
+
+        // Eliminar anterior si existe
+        if (currentMarker) {
+          currentMarker.remove();
+        }
+
+        // Crear nuevo marcador
+        currentMarker = new mapboxgl.Marker()
+          .setLngLat([lng, lat])
+          .addTo(map);
+
+        coordsElement.innerHTML = `Lat: ${lat.toFixed(6)}<br>Lng: ${lng.toFixed(6)}`;
+        map.flyTo({ center: [lng, lat], zoom: 15 });
+        clearBtn.disabled = false; // Habilitar botón
+      });
+    });
+
+    clearBtn.addEventListener('click', clearMarker);
+  </script>
+</body>
+</html>
