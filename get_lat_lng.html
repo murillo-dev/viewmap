@@ -26,25 +26,50 @@
         top: 10px;
         left: 10px;
         background: white;
-        padding: 12px;
-        border-radius: 6px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        padding: 14px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
         z-index: 2;
+        max-width: 280px;
       }
       #coords {
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         min-height: 24px;
+        font-size: 14px;
       }
       button {
-        padding: 6px 12px;
-        background: #e74c3c;
-        color: white;
+        padding: 6px 10px;
+        margin-right: 6px;
+        margin-top: 4px;
         border: none;
         border-radius: 4px;
         cursor: pointer;
+        font-size: 13px;
       }
-      button:hover {
+      #copyBtn {
+        background: #3498db;
+        color: white;
+      }
+      #copyBtn:hover {
+        background: #2980b9;
+      }
+      #clearBtn {
+        background: #e74c3c;
+        color: white;
+      }
+      #clearBtn:hover {
         background: #c0392b;
+      }
+      #copyBtn:disabled,
+      #clearBtn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      #status {
+        margin-top: 8px;
+        font-size: 12px;
+        color: #27ae60;
+        min-height: 16px;
       }
     </style>
   </head>
@@ -52,7 +77,9 @@
     <div id="map"></div>
     <div id="controls">
       <div id="coords">Haz clic en el mapa para colocar un marcador.</div>
+      <button id="copyBtn" disabled>Copiar coordenadas</button>
       <button id="clearBtn" disabled>Borrar marcador</button>
+      <div id="status"></div>
     </div>
 
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
@@ -68,16 +95,45 @@
       });
 
       const coordsElement = document.getElementById("coords");
+      const copyBtn = document.getElementById("copyBtn");
       const clearBtn = document.getElementById("clearBtn");
+      const statusElement = document.getElementById('status');
+
       let currentMarker = null;
+      let currentCoords = null;
+
+      function showStatus(message, time = 1500) {
+        statusElement.textContent = message;
+        setTimeout(() => {
+          if (statusElement.textContent === message) {
+            statusElement.textContent = "";
+          }
+        }, time);
+      }
+
+      async function copyToClipboard() {
+        if (!currentCoords) return;
+
+        const text = `${currentCoords.lat.toFixed(6)}, ${currentCoords.lng.toFixed(6)}`;
+        try {
+          await navigator.clipboard.writeText(text);
+          showStatus("¡Copiado al portapapeles!");
+        } catch (err) {
+          console.error("Error al copiar:", err);
+          showStatus("Error al copiar", 2000);
+        }
+      }
 
       function clearMarker() {
         if (currentMarker) {
           currentMarker.remove();
           currentMarker = null;
+          currentCoords = null;
           coordsElement.innerHTML =
             "Haz clic en el mapa para colocar un marcador.";
+          copyBtn.disabled = true;
           clearBtn.disabled = true;
+          statusElement.textContent = "";
         }
       }
 
@@ -87,23 +143,32 @@
         map.on("click", (e) => {
           const { lng, lat } = e.lngLat;
 
+          // Eliminar marcador anterior
           if (currentMarker) {
             currentMarker.remove();
           }
 
+          // Crear nuevo marcador
           currentMarker = new mapboxgl.Marker()
             .setLngLat([lng, lat])
             .addTo(map);
 
-          coordsElement.innerHTML = `Lat: ${lat.toFixed(
-            6
-          )}<br>Lng: ${lng.toFixed(6)}`;
+          // Guardar coordenadas
+          currentCoords = { lat, lng };
+
+          // Mostrar en pantalla
+          coordsElement.innerHTML = `Latitud: ${lat.toFixed(6)}<br />Longitud: ${lng.toFixed(6)}`;
           map.flyTo({ center: [lng, lat], zoom: 15 });
+
+          // Habilitar botones
+          copyBtn.disabled = false;
           clearBtn.disabled = false;
+
         });
       });
-
+      
       clearBtn.addEventListener("click", clearMarker);
+      copyBtn.addEventListener("click", copyToClipboard);
     </script>
   </body>
 </html>
